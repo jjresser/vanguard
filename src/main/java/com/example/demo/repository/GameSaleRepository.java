@@ -18,11 +18,6 @@ public class GameSaleRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-//    public List<GameSale> getAllSales() {
-//        String sql = "SELECT * FROM game_sales";
-//        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(GameSale.class));
-//    }
-
     public List<GameSale> getAllSales(
              int page,
              int size
