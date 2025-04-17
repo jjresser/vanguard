@@ -1,14 +1,11 @@
 package com.example.demo;
 
 import com.example.demo.Utils.General;
-import com.example.demo.dto.DailySalesSummary;
 import com.example.demo.dto.GameSale;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class GenerateCsvFile {
@@ -25,7 +22,7 @@ public class GenerateCsvFile {
             double costPrice = General.getRandomNumberUsingNextDouble(1,100);
             //example csv row content = "1,5,Fortnite,FTN,1,50.00,4.50,54.50,2025-04-01 10:15:00.\n";
             lsGameSale.add( new GameSale(
-                                        i,
+                    i,
                     General.getRandomNumberUsingNextInt(1,101) ,
                     RandomStringUtils.randomAlphabetic(20),
                     RandomStringUtils.random(5,false,true),
