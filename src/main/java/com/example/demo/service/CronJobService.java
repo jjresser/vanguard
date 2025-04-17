@@ -10,14 +10,10 @@ public class CronJobService {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    /**
-     * This method will run every 1 minute
-     */
+
     @Transactional
-    //@Scheduled(cron = "0 */${spring.cronjob.minutes} * * * *")// Runs at 0th second of every minute
     public void executeScheduledTask() {
         try {
-            //jdbcTemplate.execute("truncate game_sales_summary");
             String sql = """
                     INSERT INTO game_sales_summary (summary_date, game_no, total_games_sold, total_sales)
                     SELECT
