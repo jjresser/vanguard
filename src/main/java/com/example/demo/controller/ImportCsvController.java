@@ -4,17 +4,23 @@ import com.example.demo.service.CsvImportService; // make sure this path matches
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
+@RequestMapping("/csv")
 public class ImportCsvController {
 
     @Autowired
     private CsvImportService csvImportService;
 
+    // http://localhost:8080/csv/delete
+    @GetMapping("/delete")
+    public ResponseEntity<String> delDbRecords(){
+        return ResponseEntity.ok("delete : "+csvImportService.deleteDbGameSaleTableData());
+    }
+
+    // http://localhost:8080/csv/import
     @PostMapping("/import")
     public ResponseEntity<String> importCsv(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {

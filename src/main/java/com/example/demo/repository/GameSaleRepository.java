@@ -27,7 +27,7 @@ public class GameSaleRepository {
              int page,
              int size
     ) {
-        int offset = page * size;
+        int offset = page * size; // skip the number of records
 
         String sql = """
         SELECT id, game_no, game_name, game_code, type, cost_price, tax, sale_price, date_of_sale
@@ -46,7 +46,7 @@ public class GameSaleRepository {
     public List<GameSale> getSalesByDateRange(LocalDate from, LocalDate to,int page , int size) {
         int offset = page * size;
         String sql = """
-        SELECT id, game_no, game_name, game_code, type, cost_price, tax, sale_price, date_of_sale 
+        SELECT id, game_no, game_name, game_code, type, cost_price, tax, sale_price, date_of_sale
         FROM game_sales WHERE date_of_sale BETWEEN ? AND ?
         ORDER BY id ASC
         LIMIT ? OFFSET ?

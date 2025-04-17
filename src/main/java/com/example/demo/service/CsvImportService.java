@@ -67,4 +67,15 @@ public class CsvImportService {
             return gameSales.size();
         }
     }
+
+    @Transactional
+    public boolean deleteDbGameSaleTableData(){
+        try {
+            jdbcTemplate.execute("truncate game_sales ");
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
