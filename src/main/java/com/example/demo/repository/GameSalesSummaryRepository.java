@@ -1,6 +1,6 @@
 package com.example.demo.repository;
 
-import com.example.demo.Dto.DailySalesSummary;
+import com.example.demo.dto.DailySalesSummary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;

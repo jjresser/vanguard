@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.Dto.DailySalesSummary;
+import com.example.demo.dto.DailySalesSummary;
 import com.example.demo.repository.GameSalesSummaryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,6 +20,7 @@ public class GameSalesSummaryController {
     private GameSalesSummaryRepository repository;
 
     // 1. Daily count of games sold
+    // http://localhost:8080/getTotalSales/count?fromDate=2025-04-01&toDate=2025-04-02
     @GetMapping("/count")
     public List<DailySalesSummary> getDailyGameCounts(
             @RequestParam("fromDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
