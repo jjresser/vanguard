@@ -15,7 +15,7 @@ public class ImportCsvController {
     private CsvImportService csvImportService;
 
     // http://localhost:8080/csv/delete
-    @GetMapping("/delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<String> delDbRecords(){
         return ResponseEntity.ok("delete : "+csvImportService.deleteDbGameSaleTableData());
     }
