@@ -85,7 +85,7 @@ public class CsvImportService {
 
         for(int i =0 ; i < runTimes ; i++){
             if( i == (runTimes -1) && remainder > 0 ){
-                batches.add(gameSales.subList(i*batchSize,i*batchSize+remainder-1));
+                batches.add(gameSales.subList(i*batchSize,i*batchSize+remainder));
             }else{
                 batches.add(gameSales.subList(i*batchSize,(i+1)*batchSize));
             }
