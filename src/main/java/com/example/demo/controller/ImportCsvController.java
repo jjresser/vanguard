@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.service.CsvImportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,8 +22,8 @@ public class ImportCsvController {
     }
 
     // http://localhost:8080/csv/import
-    @PostMapping("/import")
-    public ResponseEntity<String> importCsv(@RequestParam("file") MultipartFile file) {
+    @PostMapping(path = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> importCsv(@ModelAttribute("request") @RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             return ResponseEntity.badRequest().body("File is empty.");
         }
