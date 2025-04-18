@@ -1,6 +1,7 @@
 #Requirements
 * Java 17 or newer
 * Postman App (Testing of Api)
+* Database server - MySql 
 
 #Getting Started
 * mySql create 2 tables
