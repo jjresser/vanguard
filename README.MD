@@ -43,16 +43,19 @@ and click "Send" button
 
 #Testing Api Task 3 (Use Postman app - GET method)
 http://localhost:8080/getGameSales?page=5&size=100
+![img_1.png](img_1.png)
+http://localhost:8080/getGameSales/byDate?fromDate=2025-04-01&toDate=2025-04-20&page=5&size=100
 ![img_2.png](img_2.png)
-http://localhost:8080/getGameSales/byDate?fromDate=2025-04-01&toDate=2025-04-02&page=5&size=100
-![img_3.png](img_3.png)
 http://localhost:8080/getGameSales/byPrice?price=50&operator=<&page=5&size=100
-![img_4.png](img_4.png)
+![img_3.png](img_3.png)
 
 #Testing Api Task 4 (Use Postman app - GET method)
 http://localhost:8080/getTotalSales/count?fromDate=2025-04-01&toDate=2025-04-20
-![img_5.png](img_5.png)
+![img_4.png](img_4.png)
 http://localhost:8080/getTotalSales/sales?fromDate=2025-04-01&toDate=2025-04-20
-![img_6.png](img_6.png)
+![img_5.png](img_5.png)
 http://localhost:8080/getTotalSales/salesByGameNo?gameNo=3&fromDate=2025-04-01&toDate=2025-04-30
-![img_7.png](img_7.png)
+![img_6.png](img_6.png)
+
+#Task 2 . Point 2 : Design and create the necessary tables to track the progress of the CSV import.
+This is handle by -> If Import does not go through , will rollback on runtime exceptions or errors using @Transactional annotation.
