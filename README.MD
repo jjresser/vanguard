@@ -1,12 +1,12 @@
 #Requirements
 * Java 17 or newer
-* Postman App or Swagger Url(Testing of Api)
+* Postman App (Testing of Api)
 
 #Getting Started
 * mySql create 2 tables
 using the provided scripts in the resource folder
 1. createGame_sales_summary.sql 
-2. createGamesSales.sql (Task 1)
+2. createGameSales.sql (Task 1)
 
 #Generate csv file to your local disk 
 Go to test folder  -> java -> com.example.demo -> GenerateCsvFile.java
