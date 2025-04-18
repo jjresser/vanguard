@@ -8,7 +8,7 @@ using the provided scripts in the resource folder
 1. createGame_sales_summary.sql 
 2. createGamesSales.sql (Task 1)
 
-#Generate csv file to your local disk
+#Generate csv file to your local disk 
 Go to test folder  -> java -> com.example.demo -> GenerateCsvFile.java
 Change directory below to save your csv file location.
 ```sh
@@ -16,6 +16,7 @@ String filePath = "C:/temp/vanguard/src/main/resources/import1.csv";
 ```
 After that run this java class to generate the csv file to your filePath
 
+In "resources" folder , filename import1.csv is an example of 1 million records
 #Configure Setup on application.properties
 ```sh
 spring.datasource.url=jdbc:mysql://localhost:3306/test?rewriteBatchedStatements=true
