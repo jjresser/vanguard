@@ -159,4 +159,23 @@ public class General {
         // Return as Timestamp
         return new Timestamp(randomMillis);
     }
+
+    public static <T> List<List<T>> batchUpdatePartition(List<T> batchListType, int batchSize) {
+        int totalsize = batchListType.size();
+        int runTimes = totalsize/batchSize;
+        int remainder = totalsize - (runTimes*batchSize);
+        if(remainder > 0){
+            runTimes+=1;
+        }
+        List<List<T>> batches = new ArrayList<>();
+
+        for(int i =0 ; i < runTimes ; i++){
+            if( i == (runTimes -1) && remainder > 0 ){
+                batches.add(batchListType.subList(i*batchSize,i*batchSize+remainder));
+            }else{
+                batches.add(batchListType.subList(i*batchSize,(i+1)*batchSize));
+            }
+        }
+        return batches;
+    }
 }
