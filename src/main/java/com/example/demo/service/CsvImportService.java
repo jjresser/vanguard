@@ -91,9 +91,9 @@ public class CsvImportService {
             }
         }
 
-        batches.parallelStream().forEach( perBatches -> {
-            JdbcTemplate template = new JdbcTemplate(dataSource);
-            template.batchUpdate(sql, perBatches, batchSize, (ps, gameSale) -> {
+        batches.stream().forEach( perBatches -> {
+            //JdbcTemplate template = new JdbcTemplate(dataSource);
+            jdbcTemplate.batchUpdate(sql, perBatches, batchSize, (ps, gameSale) -> {
                 ps.setInt(1, gameSale.getId());
                 ps.setInt(2, gameSale.getGameNo());
                 ps.setString(3, gameSale.getGameName());
