@@ -1,6 +1,6 @@
 #Requirements
 * Java 17 or newer
-* Postman App(Testing of Api)
+* Postman App or Swagger Url(Testing of Api)
 
 #Getting Started
 * mySql create 2 tables
@@ -29,7 +29,7 @@ spring.cronjob.seconds=1
 #Once Setup finished , run springBoot
 go to main folder -> java -> com.example.demo -> Run VanguardApplication
 
-#Swagger URL (Optional)
+#Swagger Url (Optional)
 http://localhost:8080/swagger-ui/index.html
 
 #Import the Csv file into Database through Api /csv/Import(Use Postman app - Task 5)
