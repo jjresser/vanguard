@@ -57,13 +57,13 @@ public class CsvImportService {
             """;
 
             int batchSize = 5000;
-            List<List<GameSale>> batches = General.batchUpdatePartition(gameSales,batchSize);
+            List<List<GameSale>> listOfBatches = General.listOfbatches(gameSales,batchSize);
 
-//            batches.parallelStream().forEach( perBatch ->{
+//            listOfBatches.parallelStream().forEach( perBatch ->{
 //                batchUpdateParallelStream(perBatch,batchSize,sql);
 //            });
 
-            batches.stream().forEach( perBatch ->{
+            listOfBatches.stream().forEach( perBatch ->{
                 batchUpdate(perBatch,batchSize,sql,jdbcTemplate);
             });
 

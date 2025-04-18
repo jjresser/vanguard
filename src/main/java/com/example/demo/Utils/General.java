@@ -160,7 +160,7 @@ public class General {
         return new Timestamp(randomMillis);
     }
 
-    public static <T> List<List<T>> batchUpdatePartition(List<T> batchListType, int batchSize) {
+    public static <T> List<List<T>> listOfbatches(List<T> batchListType, int batchSize) {
         int totalsize = batchListType.size();
         int runTimes = totalsize/batchSize;
         int remainder = totalsize - (runTimes*batchSize);
