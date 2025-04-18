@@ -52,7 +52,7 @@ public class CsvImportService {
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             """;
 
-            jdbcTemplate.batchUpdate(sql, gameSales, 1000, (ps, gameSale) -> {
+            jdbcTemplate.batchUpdate(sql, gameSales, 5000, (ps, gameSale) -> {
                 ps.setInt(1, gameSale.getId());
                 ps.setInt(2, gameSale.getGameNo());
                 ps.setString(3, gameSale.getGameName());
