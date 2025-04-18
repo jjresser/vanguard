@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.sql.DataSource;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -20,6 +21,9 @@ public class CsvImportService {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private DataSource dataSource;
 
     @Transactional
     public int importCsv(InputStream csvInputStream) throws Exception {
@@ -52,7 +56,44 @@ public class CsvImportService {
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             """;
 
-            jdbcTemplate.batchUpdate(sql, gameSales, 5000, (ps, gameSale) -> {
+            batchUpdatePartition(gameSales,5000,sql);
+//            jdbcTemplate.batchUpdate(sql, gameSales, 5000, (ps, gameSale) -> {
+//                ps.setInt(1, gameSale.getId());
+//                ps.setInt(2, gameSale.getGameNo());
+//                ps.setString(3, gameSale.getGameName());
+//                ps.setString(4, gameSale.getGameCode());
+//                ps.setInt(5, gameSale.getType());
+//                ps.setBigDecimal(6, gameSale.getCostPrice());
+//                ps.setBigDecimal(7, gameSale.getTax());
+//                ps.setBigDecimal(8, gameSale.getSalePrice());
+//                ps.setTimestamp(9, gameSale.getDateOfSale());
+//            });
+
+            return gameSales.size();
+        }
+    }
+
+    @Transactional
+    public void batchUpdatePartition(List<GameSale> gameSales, int batchSize, String sql){
+        int totalsize = gameSales.size();
+        int runTimes = totalsize/batchSize;
+        int remainder = totalsize - (runTimes*batchSize);
+        if(remainder > 0){
+            runTimes+=1;
+        }
+        List<List<GameSale>> batches = new ArrayList<>();
+
+        for(int i =0 ; i < runTimes ; i++){
+            if( i == (runTimes -1) && remainder > 0 ){
+                batches.add(gameSales.subList(i*batchSize,i*batchSize+remainder-1));
+            }else{
+                batches.add(gameSales.subList(i*batchSize,(i+1)*batchSize));
+            }
+        }
+
+        batches.parallelStream().forEach( perBatches -> {
+            JdbcTemplate template = new JdbcTemplate(dataSource);
+            template.batchUpdate(sql, perBatches, batchSize, (ps, gameSale) -> {
                 ps.setInt(1, gameSale.getId());
                 ps.setInt(2, gameSale.getGameNo());
                 ps.setString(3, gameSale.getGameName());
@@ -63,9 +104,7 @@ public class CsvImportService {
                 ps.setBigDecimal(8, gameSale.getSalePrice());
                 ps.setTimestamp(9, gameSale.getDateOfSale());
             });
-
-            return gameSales.size();
-        }
+        });
     }
 
     @Transactional
