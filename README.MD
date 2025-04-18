@@ -29,7 +29,10 @@ spring.cronjob.seconds=1
 #Once Setup finished , run springBoot
 go to main folder -> java -> com.example.demo -> Run VanguardApplication
 
-#Import the Csv file (Use Postman app - Task 5)
+#Swagger URL (Optional)
+http://localhost:8080/swagger-ui/index.html
+
+#Import the Csv file into Database through Api /csv/Import(Use Postman app - Task 5)
 In postman app , select POST method paste url : 
 http://localhost:8080/csv/import
 and under "Key" column type "file" . 
@@ -37,7 +40,7 @@ In the middle drop down menu ,change to "File".
 Under the "Value" column browse to the generated Csv file location and press "Send" button
 ![img.png](img.png)
 
-#Optional (Api delete database on table game_sales - DELETE method)
+# Api delete database on table game_sales - DELETE method (Optional)
 In postman app , select DELETE method paste url : 
 http://localhost:8080/csv/delete
 and click "Send" button
