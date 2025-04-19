@@ -1,8 +1,11 @@
 package com.example.demo.service;
 
 import com.example.demo.Utils.General;
+import com.example.demo.Utils.JsonKit;
 import com.example.demo.dto.GameSale;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +16,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +30,10 @@ public class CsvImportService {
     @Autowired
     private DataSource dataSource;
 
-    @Transactional
+    @Autowired
+    private IdService idService;
+
+    //@Transactional
     public int importCsv(InputStream csvInputStream) throws Exception {
         List<GameSale> gameSales = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(
@@ -58,25 +66,27 @@ public class CsvImportService {
 
             int batchSize = 5000;
             List<List<GameSale>> listOfBatches = General.listOfbatches(gameSales,batchSize);
-
-//            listOfBatches.parallelStream().forEach( perBatch ->{
-//                batchUpdateParallelStream(perBatch,batchSize,sql);
-//            });
-
-            listOfBatches.stream().forEach( perBatch ->{
-                batchUpdate(perBatch,batchSize,sql,jdbcTemplate);
+            Long uuidBatchId = idService.generateUniqueId();
+            listOfBatches.parallelStream().forEach( perBatch ->{
+                batchUpdateParallelStream(uuidBatchId,perBatch,batchSize,sql);
             });
+
+//            listOfBatches.stream().forEach( perBatch ->{
+//                batchUpdate(uuidBatchId,perBatch,batchSize,sql,jdbcTemplate);
+//            });
 
             return gameSales.size();
         }
     }
 
-    private void batchUpdateParallelStream(List<GameSale> perBatch, int batchSize, String sql) {
+    private void batchUpdateParallelStream(Long uuidBatchId , List<GameSale> perBatch, int batchSize, String sql ) {
         JdbcTemplate template = new JdbcTemplate(dataSource);
-        batchUpdate(perBatch,batchSize,sql,template);
+        batchUpdate(uuidBatchId,perBatch,batchSize,sql,template);
     }
 
-    private void batchUpdate(List<GameSale> perBatch, int batchSize,String sql,JdbcTemplate template) {
+    @Transactional
+    public void batchUpdate(Long uuidBatchId ,List<GameSale> perBatch, int batchSize,String sql,JdbcTemplate template) {
+        try{
         template.batchUpdate(sql, perBatch, batchSize, (ps, gameSale) -> {
             ps.setInt(1, gameSale.getId());
             ps.setInt(2, gameSale.getGameNo());
@@ -88,16 +98,40 @@ public class CsvImportService {
             ps.setBigDecimal(8, gameSale.getSalePrice());
             ps.setTimestamp(9, gameSale.getDateOfSale());
         });
+        insertLog(uuidBatchId,Thread.currentThread().getId(),JsonKit.toJSONString(perBatch),"",true);
+        }catch(DuplicateKeyException e){
+            StringBuilder sb = new StringBuilder();
+            System.err.println(sb.append(e).append("\n").append(JsonKit.toJSONString(perBatch)));
+            insertLog(uuidBatchId,Thread.currentThread().getId(),JsonKit.toJSONString(perBatch),e.toString(),false);
+        }catch (DataAccessException e) {
+            StringBuilder sb = new StringBuilder();
+            System.err.println(sb.append(e).append("\n").append(JsonKit.toJSONString(perBatch)));
+            insertLog(uuidBatchId,Thread.currentThread().getId(),JsonKit.toJSONString(perBatch),e.toString(),false);
+        }
     }
 
     @Transactional
     public boolean deleteDbGameSaleTableData(){
         try {
             jdbcTemplate.execute("truncate game_sales ");
+            jdbcTemplate.execute("truncate batch_log ");
             return true;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
+    }
+
+    private void insertLog(long batchId, long threadId, String jsonContent,String errorMsg, boolean success) {
+        String sql = "INSERT INTO batch_log (batchId, threadId, jsonContent, success, errorMsg, timeStamp) " +
+                "VALUES (?, ?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql,
+                batchId,
+                threadId,
+                jsonContent,
+                success,
+                errorMsg,
+                Timestamp.from(Instant.now())  // current UTC timestamp
+        );
     }
 }

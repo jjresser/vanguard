@@ -8,6 +8,7 @@
 using the provided scripts in the resource folder
 1. createGame_sales_summary.sql 
 2. createGameSales.sql (Task 1)
+3. createBatch_log.sql(Task 2)
 
 #Generate csv file to your local disk 
 Go to test folder  -> java -> com.example.demo -> GenerateCsvFile.java

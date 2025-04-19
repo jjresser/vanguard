@@ -10,8 +10,8 @@ import java.util.List;
 
 public class GenerateCsvFile {
     public static void main(String[] args) {
-        String filePath = "C:/temp/vanguard/src/main/resources/import1.csv";
-        int noOfRecords = 1000000;
+        String filePath = "C:/temp/vanguard/src/main/resources/import3.csv";
+        int noOfRecords = 10;
         General.emptyFile(filePath);
 
         String headers = "id,game_no,game_name,game_code,type,cost_price,tax,sale_price,date_of_sale";
