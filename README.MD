@@ -42,7 +42,7 @@ In the middle drop down menu ,change to "File".
 Under the "Value" column browse to the generated Csv file location and press "Send" button
 ![img.png](img.png)
 
-# Api delete database on table game_sales - DELETE method (Optional)
+# Api delete database on tables game_sales and batch_log - DELETE method (Optional)
 In postman app , select DELETE method paste url : 
 http://localhost:8080/csv/delete
 and click "Send" button
