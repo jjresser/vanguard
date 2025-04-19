@@ -98,15 +98,15 @@ public class CsvImportService {
             ps.setBigDecimal(8, gameSale.getSalePrice());
             ps.setTimestamp(9, gameSale.getDateOfSale());
         });
-        insertLog(uuidBatchId,Thread.currentThread().getId(),JsonKit.toJSONString(perBatch),"",true);
+        insertLog(uuidBatchId,Thread.currentThread().getId(),JsonKit.toJSONString(perBatch),"",true,template);
         }catch(DuplicateKeyException e){
             StringBuilder sb = new StringBuilder();
             System.err.println(sb.append(e).append("\n").append(JsonKit.toJSONString(perBatch)));
-            insertLog(uuidBatchId,Thread.currentThread().getId(),JsonKit.toJSONString(perBatch),e.toString(),false);
+            insertLog(uuidBatchId,Thread.currentThread().getId(),JsonKit.toJSONString(perBatch),e.toString(),false,template);
         }catch (DataAccessException e) {
             StringBuilder sb = new StringBuilder();
             System.err.println(sb.append(e).append("\n").append(JsonKit.toJSONString(perBatch)));
-            insertLog(uuidBatchId,Thread.currentThread().getId(),JsonKit.toJSONString(perBatch),e.toString(),false);
+            insertLog(uuidBatchId,Thread.currentThread().getId(),JsonKit.toJSONString(perBatch),e.toString(),false,template);
         }
     }
 
@@ -122,10 +122,10 @@ public class CsvImportService {
         }
     }
 
-    private void insertLog(long batchId, long threadId, String jsonContent,String errorMsg, boolean success) {
+    private void insertLog(long batchId, long threadId, String jsonContent,String errorMsg, boolean success, JdbcTemplate template) {
         String sql = "INSERT INTO batch_log (batchId, threadId, jsonContent, success, errorMsg, timeStamp) " +
                 "VALUES (?, ?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql,
+        template.update(sql,
                 batchId,
                 threadId,
                 jsonContent,
