@@ -25,7 +25,7 @@ spring.datasource.url=jdbc:mysql://localhost:3306/test?rewriteBatchedStatements=
 spring.datasource.username=root
 spring.datasource.password=
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-spring.cronjob.seconds=1
+spring.cronjob.seconds=10
 ```
 
 #Once Setup finished , run springBoot
