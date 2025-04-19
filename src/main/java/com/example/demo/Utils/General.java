@@ -118,6 +118,7 @@ public class General {
     }
 
     public static void emptyFile(String filePath){
+        createFileIfNotExists(filePath);
         try {
             // Get the Path object for the file
             Path path = Paths.get(filePath);
