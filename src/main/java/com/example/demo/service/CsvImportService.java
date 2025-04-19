@@ -68,7 +68,7 @@ public class CsvImportService {
             List<List<GameSale>> listOfBatches = General.listOfbatches(gameSales,batchSize);
             Long uuidBatchId = idService.generateUniqueId();
             listOfBatches.parallelStream().forEach( perBatch ->{
-                batchUpdateParallelStream(uuidBatchId,perBatch,batchSize,sql);
+                batchUpdate(uuidBatchId,perBatch,batchSize,sql);
             });
 
 //            listOfBatches.stream().forEach( perBatch ->{
@@ -79,15 +79,15 @@ public class CsvImportService {
         }
     }
 
-    private void batchUpdateParallelStream(Long uuidBatchId , List<GameSale> perBatch, int batchSize, String sql ) {
-        JdbcTemplate template = new JdbcTemplate(dataSource);
-        batchUpdate(uuidBatchId,perBatch,batchSize,sql,template);
-    }
+//    private void batchUpdateParallelStream(Long uuidBatchId , List<GameSale> perBatch, int batchSize, String sql ) {
+//        //JdbcTemplate template = new JdbcTemplate(dataSource);
+//        batchUpdate(uuidBatchId,perBatch,batchSize,sql);
+//    }
 
     @Transactional
-    public void batchUpdate(Long uuidBatchId ,List<GameSale> perBatch, int batchSize,String sql,JdbcTemplate template) {
+    public void batchUpdate(Long uuidBatchId ,List<GameSale> perBatch, int batchSize,String sql) {
         try{
-        template.batchUpdate(sql, perBatch, batchSize, (ps, gameSale) -> {
+        jdbcTemplate.batchUpdate(sql, perBatch, batchSize, (ps, gameSale) -> {
             ps.setInt(1, gameSale.getId());
             ps.setInt(2, gameSale.getGameNo());
             ps.setString(3, gameSale.getGameName());
@@ -98,15 +98,15 @@ public class CsvImportService {
             ps.setBigDecimal(8, gameSale.getSalePrice());
             ps.setTimestamp(9, gameSale.getDateOfSale());
         });
-        insertLog(uuidBatchId,Thread.currentThread().getId(),JsonKit.toJSONString(perBatch),"",true,template);
+        insertLog(uuidBatchId,Thread.currentThread().getId(),JsonKit.toJSONString(perBatch),"",true);
         }catch(DuplicateKeyException e){
             StringBuilder sb = new StringBuilder();
             System.err.println(sb.append(e).append("\n").append(JsonKit.toJSONString(perBatch)));
-            insertLog(uuidBatchId,Thread.currentThread().getId(),JsonKit.toJSONString(perBatch),e.toString(),false,template);
+            insertLog(uuidBatchId,Thread.currentThread().getId(),JsonKit.toJSONString(perBatch),e.toString(),false);
         }catch (DataAccessException e) {
             StringBuilder sb = new StringBuilder();
             System.err.println(sb.append(e).append("\n").append(JsonKit.toJSONString(perBatch)));
-            insertLog(uuidBatchId,Thread.currentThread().getId(),JsonKit.toJSONString(perBatch),e.toString(),false,template);
+            insertLog(uuidBatchId,Thread.currentThread().getId(),JsonKit.toJSONString(perBatch),e.toString(),false);
         }
     }
 
@@ -122,10 +122,10 @@ public class CsvImportService {
         }
     }
 
-    private void insertLog(long batchId, long threadId, String jsonContent,String errorMsg, boolean success, JdbcTemplate template) {
+    private void insertLog(long batchId, long threadId, String jsonContent,String errorMsg, boolean success) {
         String sql = "INSERT INTO batch_log (batchId, threadId, jsonContent, success, errorMsg, timeStamp) " +
                 "VALUES (?, ?, ?, ?, ?, ?)";
-        template.update(sql,
+        jdbcTemplate.update(sql,
                 batchId,
                 threadId,
                 jsonContent,
