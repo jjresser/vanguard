@@ -11,7 +11,7 @@ import java.util.List;
 public class GenerateCsvFile {
     public static void main(String[] args) {
         String filePath = "C:/temp/vanguard/src/main/resources/import3.csv";
-        int noOfRecords = 10;
+        int noOfRecords = 1000000;
         General.emptyFile(filePath);
 
         String headers = "id,game_no,game_name,game_code,type,cost_price,tax,sale_price,date_of_sale";
