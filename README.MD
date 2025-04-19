@@ -4,7 +4,7 @@
 * Database server - MySql 
 
 #Getting Started
-* mySql create 2 tables
+* mySql create 3 tables
 using the provided scripts in the resource folder
 1. createGame_sales_summary.sql 
 2. createGameSales.sql (Task 1)
