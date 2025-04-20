@@ -26,6 +26,7 @@ spring.datasource.username=root
 spring.datasource.password=
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 spring.cronjob.seconds=10
+spring.batch.size=5000
 ```
 
 #Once Setup finished , run springBoot
@@ -64,4 +65,5 @@ http://localhost:8080/getTotalSales/salesByGameNo?gameNo=3&fromDate=2025-04-01&t
 ![img_6.png](img_6.png)
 
 #Task 2 . Point 2 : Design and create the necessary tables to track the progress of the CSV import.
-You can check database table name batch_log for which are success and not successful.
+Check database table name batch_log for which are success and not successful.
+Per batch max size set at application.properties file ->  spring.batch.size=5000

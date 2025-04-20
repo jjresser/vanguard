@@ -4,6 +4,7 @@ import com.example.demo.Utils.General;
 import com.example.demo.Utils.JsonKit;
 import com.example.demo.dto.GameSale;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -28,6 +29,9 @@ public class CsvImportService {
 
     @Autowired
     private IdService idService;
+
+    @Value("${spring.batch.size}")
+    private int batchSize;
 
     //@Transactional
     public int importCsv(InputStream csvInputStream) throws Exception {
@@ -60,11 +64,10 @@ public class CsvImportService {
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             """;
 
-            int batchSize = 5000;
             List<List<GameSale>> listOfBatches = General.listOfbatches(gameSales,batchSize);
             Long uuidBatchId = idService.generateUniqueId();
             listOfBatches.parallelStream().forEach( perBatch ->{
-                batchUpdate(uuidBatchId,perBatch,batchSize,sql);
+                batchUpdate(uuidBatchId,perBatch,sql);
             });
 
 //            listOfBatches.stream().forEach( perBatch ->{
@@ -81,7 +84,7 @@ public class CsvImportService {
 //    }
 
     //@Transactional
-    public void batchUpdate(Long uuidBatchId ,List<GameSale> perBatch, int batchSize,String sql) {
+    public void batchUpdate(Long uuidBatchId ,List<GameSale> perBatch,String sql) {
         try{
         jdbcTemplate.batchUpdate(sql, perBatch, batchSize, (ps, gameSale) -> {
             ps.setInt(1, gameSale.getId());
