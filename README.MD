@@ -64,5 +64,4 @@ http://localhost:8080/getTotalSales/salesByGameNo?gameNo=3&fromDate=2025-04-01&t
 ![img_6.png](img_6.png)
 
 #Task 2 . Point 2 : Design and create the necessary tables to track the progress of the CSV import.
-This is handle by -> If Import does not go through , will rollback on runtime exceptions or errors using @Transactional annotation.
 You can check database table name batch_log for which are success and not successful.

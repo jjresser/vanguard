@@ -80,7 +80,7 @@ public class CsvImportService {
 //        batchUpdate(uuidBatchId,perBatch,batchSize,sql);
 //    }
 
-    @Transactional
+    //@Transactional
     public void batchUpdate(Long uuidBatchId ,List<GameSale> perBatch, int batchSize,String sql) {
         try{
         jdbcTemplate.batchUpdate(sql, perBatch, batchSize, (ps, gameSale) -> {
