@@ -35,6 +35,7 @@ public class CsvImportService {
 
     //@Transactional
     public int importCsv(InputStream csvInputStream) throws Exception {
+        int count = 0;
         List<GameSale> gameSales = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(csvInputStream, StandardCharsets.UTF_8))) {
@@ -56,6 +57,7 @@ public class CsvImportService {
                         General.dateTimeStrTotimestamp(fields[8])
                 );
                 gameSales.add(eachRow);
+                count++;
             }
 
             String sql = """
@@ -73,8 +75,9 @@ public class CsvImportService {
 //            listOfBatches.stream().forEach( perBatch ->{
 //                batchUpdate(uuidBatchId,perBatch,batchSize,sql,jdbcTemplate);
 //            });
-
-            return gameSales.size();
+            gameSales.clear();
+            System.gc();
+            return count;
         }
     }
 
