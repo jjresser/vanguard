@@ -20,6 +20,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class CsvImportService {
@@ -34,7 +35,7 @@ public class CsvImportService {
     private int batchSize;
 
     //@Transactional
-    public int importCsv(InputStream csvInputStream) throws Exception {
+    public ConcurrentHashMap<String,Object> importCsv(InputStream csvInputStream) throws Exception {
         int count = 0;
         List<GameSale> gameSales = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(
@@ -68,16 +69,21 @@ public class CsvImportService {
 
             List<List<GameSale>> listOfBatches = General.listOfbatches(gameSales,batchSize);
             Long uuidBatchId = idService.generateUniqueId();
+            List<String> error = new ArrayList<>();
             listOfBatches.parallelStream().forEach( perBatch ->{
-                batchUpdate(uuidBatchId,perBatch,sql);
+                batchUpdate(uuidBatchId,perBatch,sql,error);
             });
 
 //            listOfBatches.stream().forEach( perBatch ->{
 //                batchUpdate(uuidBatchId,perBatch,batchSize,sql,jdbcTemplate);
 //            });
+            listOfBatches.clear();
             gameSales.clear();
             System.gc();
-            return count;
+            ConcurrentHashMap<String,Object> cHm = new ConcurrentHashMap<>();
+            cHm.put("count",String.valueOf(count));
+            cHm.put("error",error);
+            return cHm;
         }
     }
 
@@ -87,7 +93,7 @@ public class CsvImportService {
 //    }
 
     //@Transactional
-    public void batchUpdate(Long uuidBatchId ,List<GameSale> perBatch,String sql) {
+    public void batchUpdate(Long uuidBatchId ,List<GameSale> perBatch,String sql,List<String> error) {
         try{
         jdbcTemplate.batchUpdate(sql, perBatch, batchSize, (ps, gameSale) -> {
             ps.setInt(1, gameSale.getId());
@@ -105,10 +111,12 @@ public class CsvImportService {
             StringBuilder sb = new StringBuilder();
             System.err.println(sb.append(e).append("\n").append(JsonKit.toJSONString(perBatch)));
             insertLog(uuidBatchId,Thread.currentThread().getId(),JsonKit.toJSONString(perBatch),e.toString(),false);
+            error.add(e.toString());
         }catch (DataAccessException e) {
             StringBuilder sb = new StringBuilder();
             System.err.println(sb.append(e).append("\n").append(JsonKit.toJSONString(perBatch)));
             insertLog(uuidBatchId,Thread.currentThread().getId(),JsonKit.toJSONString(perBatch),e.toString(),false);
+            error.add(e.toString());
         }
     }
 

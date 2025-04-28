@@ -33,7 +33,7 @@ spring.batch.size=5000
 go to main folder -> java -> com.example.demo -> Run VanguardApplication
 
 #Swagger Url (Optional)
-http://localhost:8080/swagger-ui/index.html
+http://localhost:8888/swagger-ui/index.html
 
 #Import the Csv file into Database through Api /csv/Import(Use Postman app - Task 5)
 In postman app , select POST method paste url : 
