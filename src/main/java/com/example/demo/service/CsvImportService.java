@@ -79,10 +79,11 @@ public class CsvImportService {
 //            });
             listOfBatches.clear();
             gameSales.clear();
-            System.gc();
+
             ConcurrentHashMap<String,Object> cHm = new ConcurrentHashMap<>();
             cHm.put("count",String.valueOf(count));
             cHm.put("error",error);
+            System.gc();
             return cHm;
         }
     }

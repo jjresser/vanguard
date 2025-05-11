@@ -1,10 +1,12 @@
 package com.example.demo.dto;
 
 import com.example.demo.Utils.General;
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
+@Data
 public class GameSale {
     private int id;
     private int gameNo;
@@ -39,78 +41,6 @@ public class GameSale {
         this.costPrice = costPrice;
         this.tax = tax;
         this.salePrice = salePrice;
-        this.dateOfSale = dateOfSale;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getGameNo() {
-        return gameNo;
-    }
-
-    public void setGameNo(int gameNo) {
-        this.gameNo = gameNo;
-    }
-
-    public String getGameName() {
-        return gameName;
-    }
-
-    public void setGameName(String gameName) {
-        this.gameName = gameName;
-    }
-
-    public String getGameCode() {
-        return gameCode;
-    }
-
-    public void setGameCode(String gameCode) {
-        this.gameCode = gameCode;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
-
-    public BigDecimal getCostPrice() {
-        return costPrice;
-    }
-
-    public void setCostPrice(BigDecimal costPrice) {
-        this.costPrice = costPrice;
-    }
-
-    public BigDecimal getTax() {
-        return tax;
-    }
-
-    public void setTax(BigDecimal tax) {
-        this.tax = tax;
-    }
-
-    public BigDecimal getSalePrice() {
-        return salePrice;
-    }
-
-    public void setSalePrice(BigDecimal salePrice) {
-        this.salePrice = salePrice;
-    }
-
-    public Timestamp getDateOfSale() {
-        return dateOfSale;
-    }
-
-    public void setDateOfSale(Timestamp dateOfSale) {
         this.dateOfSale = dateOfSale;
     }
 

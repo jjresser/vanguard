@@ -30,5 +30,4 @@ public class myTest {
         System.out.println(JsonKit.toJSONString(lsGs));
     }
 
-
 }
