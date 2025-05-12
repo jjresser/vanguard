@@ -1,6 +1,8 @@
 package com.example.demo;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.demo.dto.BatchLog;
+import com.example.demo.service.CsvImportService;
 import com.example.demo.service.IdService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,10 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 @SpringBootTest
 class VanguardApplicationTests {
 
@@ -20,6 +26,9 @@ class VanguardApplicationTests {
 
 	@Autowired
 	private IdService idService;
+
+	@Autowired
+	private CsvImportService csvImportService;
 
 	@Test
 	void contextLoads() {
@@ -30,6 +39,20 @@ class VanguardApplicationTests {
 		String sql = "select count(*) from bigsmall";
 		int count =  jdbcTemplate.queryForObject(sql, Integer.class);
 		System.out.println(count);
+	}
+
+	@Test
+	void sqlGet(){
+		System.out.println(csvImportService.getGameNoById(5));
+	}
+
+	@Test
+	void mockTest(){
+		CsvImportService mockCsvImportService = mock(CsvImportService.class);
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("game_no","43");
+		when(mockCsvImportService.getGameNoById(6)).thenReturn(jsonObject);
+		assertEquals("43",mockCsvImportService.getGameNoById(6).getString("game_no"));
 	}
 
 	@Test

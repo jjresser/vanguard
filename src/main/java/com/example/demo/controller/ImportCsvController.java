@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.demo.Utils.JsonKit;
 import com.example.demo.service.CsvImportService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,5 +43,12 @@ public class ImportCsvController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("CSV import failed: " + e.getMessage());
         }
+    }
+
+    @GetMapping(path = "/id/{num}")
+    @ResponseBody
+    public ResponseEntity<String> getId(@PathVariable int id){
+        JSONObject jsonObject = csvImportService.getJSONObjectFromQuery("select game_no from game_sales where id = ?");
+        return ResponseEntity.ok("");
     }
 }

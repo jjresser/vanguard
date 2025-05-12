@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.demo.Utils.General;
 import com.example.demo.Utils.JsonKit;
 import com.example.demo.dto.GameSale;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -131,6 +133,34 @@ public class CsvImportService {
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Transactional
+    public JSONObject getJSONObjectFromQuery(String sql) {
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
+            JSONObject json = new JSONObject();
+            int columnCount = rs.getMetaData().getColumnCount();
+            for (int i = 1; i <= columnCount; i++) {
+                String column = rs.getMetaData().getColumnLabel(i);
+                Object value = rs.getObject(i);
+                json.put(column, value);
+            }
+            return json;
+        });
+    }
+
+    public JSONObject getGameNoById(int id) {
+        String sql = "SELECT game_no FROM game_sales WHERE id = ?";
+        JSONObject result = new JSONObject();
+
+        try {
+            String gameNo = jdbcTemplate.queryForObject(sql, String.class, id);
+            result.put("game_no", gameNo);
+        } catch (EmptyResultDataAccessException e) {
+            result.put("game_no", null);
+        }
+
+        return result;
     }
 
     private void insertLog(long batchId, long threadId, String jsonContent,String errorMsg, boolean success) {
