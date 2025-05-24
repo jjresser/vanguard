@@ -55,7 +55,7 @@ public class GameSalesSummaryController {
             )
             @RequestParam("toDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to
     ) {
-        return ResponseEntity.ok("totalSales : " + repository.getGameCounts(from, to).stream().map(DailySalesSummary::getTotalSales).reduce(BigDecimal.ZERO, BigDecimal::add));
+        return ResponseEntity.ok("totalSales : " + repository.getTotalSales(from, to).stream().map(DailySalesSummary::getTotalSales).reduce(BigDecimal.ZERO, BigDecimal::add));
     }
 
     // 3. Daily total sales for a specific game_no

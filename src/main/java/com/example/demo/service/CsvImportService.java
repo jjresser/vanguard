@@ -11,6 +11,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
@@ -95,7 +96,7 @@ public class CsvImportService {
 //        batchUpdate(uuidBatchId,perBatch,batchSize,sql);
 //    }
 
-    //@Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void batchUpdate(Long uuidBatchId ,List<GameSale> perBatch,String sql,List<String> error) {
         try{
         jdbcTemplate.batchUpdate(sql, perBatch, batchSize, (ps, gameSale) -> {

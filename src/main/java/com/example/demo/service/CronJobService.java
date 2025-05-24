@@ -3,6 +3,7 @@ package com.example.demo.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -11,7 +12,7 @@ public class CronJobService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void executeScheduledTask() {
         try {
             String sql = """

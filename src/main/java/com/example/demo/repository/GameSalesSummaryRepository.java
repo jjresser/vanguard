@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,6 +17,7 @@ public class GameSalesSummaryRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public List<DailySalesSummary> getGameCounts(LocalDate from, LocalDate to) {
         String sql = """
             SELECT summary_date, game_no, total_games_sold, total_sales
@@ -27,6 +30,7 @@ public class GameSalesSummaryRepository {
         );
     }
 
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public List<DailySalesSummary> getTotalSales(LocalDate from, LocalDate to) {
         String sql = """
             SELECT summary_date, game_no, total_games_sold, total_sales
@@ -39,6 +43,7 @@ public class GameSalesSummaryRepository {
         );
     }
 
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public List<DailySalesSummary> getTotalSalesByGameNo(int gameNo, LocalDate from, LocalDate to) {
         String sql = """
             SELECT summary_date, game_no, total_games_sold, total_sales

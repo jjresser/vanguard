@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -38,6 +40,7 @@ public class GameSaleRepository {
                 );
     }
 
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public List<GameSale> getSalesByDateRange(LocalDate from, LocalDate to,int page , int size) {
         int offset = page * size;
         String sql = """
@@ -56,6 +59,7 @@ public class GameSaleRepository {
         );
     }
 
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public List<GameSale> getSalesByPriceFilter(BigDecimal price, String operator, int page , int size) {
         int offset = page * size;
         String sql;
